@@ -1,13 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'app-of-apps'
+  name: 'leaderboard-qa'
 spec:
   destination:
     name: 'in-cluster'
-    namespace: 'argocd'
+    namespace: 'qa'
   source:
-    path: 'apps/'
+    path: 'charts/leaderboard'
     repoURL: 'ssh://root@10.5.0.35/root/argo-cd-learning-assets/'
     targetRevision: HEAD
+    helm:
+      valueFiles:
+      - values-qa.yaml
   project: 'default'
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
