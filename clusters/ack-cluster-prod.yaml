@@ -1,8 +1,8 @@
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: VPC
 metadata:
-  namespace: production
-  name: prod-cluster-vpc
+  namespace: team-prod
+  name: prd-cluster-vpc
 spec:
   cidrBlocks:
   - 192.168.0.0/16
@@ -12,87 +12,87 @@ spec:
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: ElasticIPAddress
 metadata:
-  namespace: production
-  name: prod-cluster-eip
+  namespace: team-prod
+  name: prd-cluster-eip
 spec: {}
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: InternetGateway
 metadata:
-  namespace: production
-  name: prod-cluster-igw
+  namespace: team-prod
+  name: prd-cluster-igw
 spec:
   vpcRef:
     from:
-      name: prod-cluster-vpc
+      name: prd-cluster-vpc
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: RouteTable
 metadata:
-  namespace: production
-  name: prod-cluster-public-route-table
+  namespace: team-prod
+  name: prd-cluster-public-route-table
 spec:
   vpcRef:
     from:
-      name: prod-cluster-vpc
+      name: prd-cluster-vpc
   routes:
     - destinationCIDRBlock: 0.0.0.0/0
       gatewayRef:
         from:
-          name: prod-cluster-igw
+          name: prd-cluster-igw
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: production
-  name: prod-cluster-public-subnet1
+  namespace: team-prod
+  name: prd-cluster-public-subnet1
 spec:
   availabilityZone: eu-west-1a
   cidrBlock: 192.168.0.0/18
   vpcRef:
     from:
-      name: prod-cluster-vpc
+      name: prd-cluster-vpc
   routeTableRefs:
   - from:
-      name: prod-cluster-public-route-table
+      name: prd-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: production
-  name: prod-cluster-public-subnet2
+  namespace: team-prod
+  name: prd-cluster-public-subnet2
 spec:
   availabilityZone: eu-west-1b
   cidrBlock: 192.168.64.0/18
   vpcRef:
     from:
-      name: prod-cluster-vpc
+      name: prd-cluster-vpc
   routeTableRefs:
   - from:
-      name: prod-cluster-public-route-table
+      name: prd-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: NATGateway
 metadata:
-  namespace: production
-  name: prod-cluster-natgateway1
+  namespace: team-prod
+  name: prd-cluster-natgateway1
 spec:
   subnetRef:
     from:
-      name: prod-cluster-public-subnet2
+      name: prd-cluster-public-subnet2
   allocationRef:
     from:
-      name: prod-cluster-eip
+      name: prd-cluster-eip
 ---
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: production
-  name: prod-cluster-cluster-role
+  namespace: team-prod
+  name: prd-cluster-cluster-role
 spec:
-  name: prod-cluster-cluster-role
+  name: prd-cluster-cluster-role
   description: "prod cluster cluster role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -113,10 +113,10 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: production
-  name: prod-cluster-node-role
+  namespace: team-prod
+  name: prd-cluster-node-role
 spec:
-  name: prod-cluster-node-role
+  name: prd-cluster-node-role
   description: "prod cluster node role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
@@ -139,10 +139,10 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: production
-  name: ack-admin-pia-role-prod
+  namespace: team-prod
+  name: ack-admin-pia-role-prd
 spec:
-  name: ack-admin-pia-role-prod
+  name: ack-admin-pia-role-prd
   description: "prod cluster admin pia role"
   policies:
     - arn:aws:iam::aws:policy/AdministratorAccess
@@ -167,42 +167,42 @@ spec:
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
-  namespace: production
-  name: prod-cluster
+  namespace: team-prod
+  name: prd-cluster
 spec:
-  name: prod-cluster
+  name: prd-cluster
   roleRef:
     from:
-      name: prod-cluster-cluster-role
+      name: prd-cluster-cluster-role
   version: "1.29"
   resourcesVPCConfig:
     endpointPrivateAccess: false
     endpointPublicAccess: true
     subnetRefs:
     - from:
-        name: prod-cluster-public-subnet1
+        name: prd-cluster-public-subnet1
     - from:
-        name: prod-cluster-public-subnet2
+        name: prd-cluster-public-subnet2
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
 metadata:
-  namespace: production
-  name: prod-cluster-nodegroup
+  namespace: team-prod
+  name: prd-cluster-nodegroup
 spec:
-  name: prod-ng
+  name: prd-ng
   diskSize: 100
   clusterRef:
     from:
-      name: prod-cluster
+      name: prd-cluster
   subnetRefs:
   - from:
-      name: prod-cluster-public-subnet1
+      name: prd-cluster-public-subnet1
   - from:
-      name: prod-cluster-public-subnet2
+      name: prd-cluster-public-subnet2
   nodeRoleRef:
     from:
-      name: prod-cluster-node-role
+      name: prd-cluster-node-role
   updateConfig:
     maxUnavailable: 1
   scalingConfig:

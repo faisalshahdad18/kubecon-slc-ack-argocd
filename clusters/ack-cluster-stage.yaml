@@ -1,8 +1,8 @@
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: VPC
 metadata:
-  namespace: staging
-  name: dev-cluster-vpc
+  namespace: team-stage
+  name: stg-cluster-vpc
 spec:
   cidrBlocks:
   - 192.168.0.0/16
@@ -12,88 +12,88 @@ spec:
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: ElasticIPAddress
 metadata:
-  namespace: staging
-  name: dev-cluster-eip
+  namespace: team-stage
+  name: stg-cluster-eip
 spec: {}
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: InternetGateway
 metadata:
-  namespace: staging
-  name: dev-cluster-igw
+  namespace: team-stage
+  name: stg-cluster-igw
 spec:
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: stg-cluster-vpc
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: RouteTable
 metadata:
-  namespace: staging
-  name: dev-cluster-public-route-table
+  namespace: team-stage
+  name: stg-cluster-public-route-table
 spec:
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: stg-cluster-vpc
   routes:
     - destinationCIDRBlock: 0.0.0.0/0
       gatewayRef:
         from:
-          name: dev-cluster-igw
+          name: stg-cluster-igw
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: staging
-  name: dev-cluster-public-subnet1
+  namespace: team-stage
+  name: stg-cluster-public-subnet1
 spec:
   availabilityZone: eu-west-2a
   cidrBlock: 192.168.0.0/18
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: stg-cluster-vpc
   routeTableRefs:
   - from:
-      name: dev-cluster-public-route-table
+      name: stg-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: staging
-  name: dev-cluster-public-subnet2
+  namespace: team-stage
+  name: stg-cluster-public-subnet2
 spec:
   availabilityZone: eu-west-2b
   cidrBlock: 192.168.64.0/18
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: stg-cluster-vpc
   routeTableRefs:
   - from:
-      name: dev-cluster-public-route-table
+      name: stg-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: NATGateway
 metadata:
-  namespace: staging
-  name: dev-cluster-natgateway1
+  namespace: team-stage
+  name: stg-cluster-natgateway1
 spec:
   subnetRef:
     from:
-      name: dev-cluster-public-subnet2
+      name: stg-cluster-public-subnet2
   allocationRef:
     from:
-      name: dev-cluster-eip
+      name: stg-cluster-eip
 ---
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: staging
-  name: dev-cluster-cluster-role
+  namespace: team-stage
+  name: stg-cluster-cluster-role
 spec:
-  name: dev-cluster-cluster-role
-  description: "dev cluster cluster role"
+  name: stg-cluster-cluster-role
+  description: "stage cluster cluster role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
   assumeRolePolicyDocument: |
@@ -113,11 +113,11 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: staging
-  name: dev-cluster-node-role
+  namespace: team-stage
+  name: stg-cluster-node-role
 spec:
-  name: dev-cluster-node-role
-  description: "dev cluster node role"
+  name: stg-cluster-node-role
+  description: "stage cluster node role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
     - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
@@ -139,11 +139,11 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: staging
-  name: ack-admin-pia-role-stage
+  namespace: team-stage
+  name: ack-admin-pia-role-stg
 spec:
-  name: ack-admin-pia-role-stage
-  description: "dev cluster admin pia role"
+  name: ack-admin-pia-role-stg
+  description: "stage cluster admin pia role"
   policies:
     - arn:aws:iam::aws:policy/AdministratorAccess
   assumeRolePolicyDocument: |
@@ -167,42 +167,42 @@ spec:
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
-  namespace: staging
-  name: dev-cluster
+  namespace: team-stage
+  name: stg-cluster
 spec:
-  name: dev-cluster
+  name: stg-cluster
   roleRef:
     from:
-      name: dev-cluster-cluster-role
+      name: stg-cluster-cluster-role
   version: "1.29"
   resourcesVPCConfig:
     endpointPrivateAccess: false
     endpointPublicAccess: true
     subnetRefs:
     - from:
-        name: dev-cluster-public-subnet1
+        name: stg-cluster-public-subnet1
     - from:
-        name: dev-cluster-public-subnet2
+        name: stg-cluster-public-subnet2
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
 metadata:
-  namespace: staging
-  name: dev-cluster-nodegroup
+  namespace: team-stage
+  name: stg-cluster-nodegroup
 spec:
-  name: dev-ng
+  name: stg-ng
   diskSize: 100
   clusterRef:
     from:
-      name: dev-cluster
+      name: stg-cluster
   subnetRefs:
   - from:
-      name: dev-cluster-public-subnet1
+      name: stg-cluster-public-subnet1
   - from:
-      name: dev-cluster-public-subnet2
+      name: stg-cluster-public-subnet2
   nodeRoleRef:
     from:
-      name: dev-cluster-node-role
+      name: stg-cluster-node-role
   updateConfig:
     maxUnavailable: 1
   scalingConfig:

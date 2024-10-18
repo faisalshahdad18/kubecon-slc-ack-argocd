@@ -1,8 +1,8 @@
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: VPC
 metadata:
-  namespace: development
-  name: dev-cluster-vpc
+  namespace: team-dev
+  name: dv-cluster-vpc
 spec:
   cidrBlocks:
   - 192.168.0.0/16
@@ -12,87 +12,87 @@ spec:
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: ElasticIPAddress
 metadata:
-  namespace: development
-  name: dev-cluster-eip
+  namespace: team-dev
+  name: dv-cluster-eip
 spec: {}
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: InternetGateway
 metadata:
-  namespace: development
-  name: dev-cluster-igw
+  namespace: team-dev
+  name: dv-cluster-igw
 spec:
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: dv-cluster-vpc
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: RouteTable
 metadata:
-  namespace: development
-  name: dev-cluster-public-route-table
+  namespace: team-dev
+  name: dv-cluster-public-route-table
 spec:
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: dv-cluster-vpc
   routes:
     - destinationCIDRBlock: 0.0.0.0/0
       gatewayRef:
         from:
-          name: dev-cluster-igw
+          name: dv-cluster-igw
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: development
-  name: dev-cluster-public-subnet1
+  namespace: team-dev
+  name: dv-cluster-public-subnet1
 spec:
   availabilityZone: eu-west-2a
   cidrBlock: 192.168.0.0/18
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: dv-cluster-vpc
   routeTableRefs:
   - from:
-      name: dev-cluster-public-route-table
+      name: dv-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: development
-  name: dev-cluster-public-subnet2
+  namespace: team-dev
+  name: dv-cluster-public-subnet2
 spec:
   availabilityZone: eu-west-2b
   cidrBlock: 192.168.64.0/18
   vpcRef:
     from:
-      name: dev-cluster-vpc
+      name: dv-cluster-vpc
   routeTableRefs:
   - from:
-      name: dev-cluster-public-route-table
+      name: dv-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: NATGateway
 metadata:
-  namespace: development
-  name: dev-cluster-natgateway1
+  namespace: team-dev
+  name: dv-cluster-natgateway1
 spec:
   subnetRef:
     from:
-      name: dev-cluster-public-subnet2
+      name: dv-cluster-public-subnet2
   allocationRef:
     from:
-      name: dev-cluster-eip
+      name: dv-cluster-eip
 ---
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: development
-  name: dev-cluster-cluster-role
+  namespace: team-dev
+  name: dv-cluster-cluster-role
 spec:
-  name: dev-cluster-cluster-role
+  name: dv-cluster-cluster-role
   description: "dev cluster cluster role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -113,10 +113,10 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: development
-  name: dev-cluster-node-role
+  namespace: team-dev
+  name: dv-cluster-node-role
 spec:
-  name: dev-cluster-node-role
+  name: dv-cluster-node-role
   description: "dev cluster node role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
@@ -139,10 +139,10 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: development
-  name: ack-admin-pia-role-dev
+  namespace: team-dev
+  name: ack-admin-pia-role-dv
 spec:
-  name: ack-admin-pia-role-dev
+  name: ack-admin-pia-role-dv
   description: "dev cluster admin pia role"
   policies:
     - arn:aws:iam::aws:policy/AdministratorAccess
@@ -167,42 +167,42 @@ spec:
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
-  namespace: development
-  name: dev-cluster
+  namespace: team-dev
+  name: dv-cluster
 spec:
-  name: dev-cluster
+  name: dv-cluster
   roleRef:
     from:
-      name: dev-cluster-cluster-role
+      name: dv-cluster-cluster-role
   version: "1.29"
   resourcesVPCConfig:
     endpointPrivateAccess: false
     endpointPublicAccess: true
     subnetRefs:
     - from:
-        name: dev-cluster-public-subnet1
+        name: dv-cluster-public-subnet1
     - from:
-        name: dev-cluster-public-subnet2
+        name: dv-cluster-public-subnet2
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
 metadata:
-  namespace: development
-  name: dev-cluster-nodegroup
+  namespace: team-dev
+  name: dv-cluster-nodegroup
 spec:
-  name: dev-ng
+  name: dv-ng
   diskSize: 100
   clusterRef:
     from:
-      name: dev-cluster
+      name: dv-cluster
   subnetRefs:
   - from:
-      name: dev-cluster-public-subnet1
+      name: dv-cluster-public-subnet1
   - from:
-      name: dev-cluster-public-subnet2
+      name: dv-cluster-public-subnet2
   nodeRoleRef:
     from:
-      name: dev-cluster-node-role
+      name: dv-cluster-node-role
   updateConfig:
     maxUnavailable: 1
   scalingConfig:

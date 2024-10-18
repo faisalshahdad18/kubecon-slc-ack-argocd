@@ -1,0 +1,88 @@
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: development
+  name: ack-admin-pia-role-dev
+spec:
+  name: ack-admin-pia-role-dev
+  description: "dev cluster admin pia role"
+  policies:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+  assumeRolePolicyDocument: |
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "pods.eks.amazonaws.com"
+                },
+                "Action": [
+                    "sts:AssumeRole",
+                    "sts:TagSession"
+                ]
+            }
+        ]
+    }
+
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: staging
+  name: ack-admin-pia-role-stage
+spec:
+  name: ack-admin-pia-role-stage
+  description: "stage cluster admin pia role"
+  policies:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+  assumeRolePolicyDocument: |
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "pods.eks.amazonaws.com"
+                },
+                "Action": [
+                    "sts:AssumeRole",
+                    "sts:TagSession"
+                ]
+            }
+        ]
+    }
+
+
+---
+
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: production
+  name: ack-admin-pia-role-prod
+spec:
+  name: ack-admin-pia-role-prod
+  description: "prod cluster admin pia role"
+  policies:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+  assumeRolePolicyDocument: |
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "pods.eks.amazonaws.com"
+                },
+                "Action": [
+                    "sts:AssumeRole",
+                    "sts:TagSession"
+                ]
+            }
+        ]
+    }
