@@ -47,7 +47,7 @@ metadata:
   namespace: team-prod
   name: prd-cluster-public-subnet1
 spec:
-  availabilityZone: eu-west-1a
+  availabilityZone: eu-west-2a
   cidrBlock: 192.168.0.0/18
   vpcRef:
     from:
@@ -63,7 +63,7 @@ metadata:
   namespace: team-prod
   name: prd-cluster-public-subnet2
 spec:
-  availabilityZone: eu-west-1b
+  availabilityZone: eu-west-2b
   cidrBlock: 192.168.64.0/18
   vpcRef:
     from:
