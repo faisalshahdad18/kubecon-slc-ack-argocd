@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "helm-scoreboard.fullname" . }}
+  name: {{ template "helm-leaderboard.fullname" . }}
   labels:
-    app: {{ template "helm-scoreboard.name" . }}
-    chart: {{ template "helm-scoreboard.chart" . }}
+    app: {{ template "helm-leaderboard.name" . }}
+    chart: {{ template "helm-leaderboard.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -12,12 +12,12 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: {{ template "helm-scoreboard.name" . }}
+      app: {{ template "helm-leaderboard.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "helm-scoreboard.name" . }}
+        app: {{ template "helm-leaderboard.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
