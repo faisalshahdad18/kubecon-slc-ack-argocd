@@ -140,9 +140,9 @@ apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
   namespace: production
-  name: ack-admin-pia-role
+  name: ack-admin-pia-role-prod
 spec:
-  name: ack-admin-pia-role
+  name: ack-admin-pia-role-prod
   description: "prod cluster admin pia role"
   policies:
     - arn:aws:iam::aws:policy/AdministratorAccess
