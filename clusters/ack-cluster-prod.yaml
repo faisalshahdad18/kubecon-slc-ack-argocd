@@ -1,0 +1,211 @@
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: VPC
+metadata:
+  namespace: production
+  name: prod-cluster-vpc
+spec:
+  cidrBlocks:
+  - 192.168.0.0/16
+  enableDNSSupport: true
+  enableDNSHostnames: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: ElasticIPAddress
+metadata:
+  namespace: production
+  name: prod-cluster-eip
+spec: {}
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: InternetGateway
+metadata:
+  namespace: production
+  name: prod-cluster-igw
+spec:
+  vpcRef:
+    from:
+      name: prod-cluster-vpc
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: RouteTable
+metadata:
+  namespace: production
+  name: prod-cluster-public-route-table
+spec:
+  vpcRef:
+    from:
+      name: prod-cluster-vpc
+  routes:
+    - destinationCIDRBlock: 0.0.0.0/0
+      gatewayRef:
+        from:
+          name: prod-cluster-igw
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: Subnet
+metadata:
+  namespace: production
+  name: prod-cluster-public-subnet1
+spec:
+  availabilityZone: eu-west-2a
+  cidrBlock: 192.168.0.0/18
+  vpcRef:
+    from:
+      name: prod-cluster-vpc
+  routeTableRefs:
+  - from:
+      name: prod-cluster-public-route-table
+  mapPublicIPOnLaunch: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: Subnet
+metadata:
+  namespace: production
+  name: prod-cluster-public-subnet2
+spec:
+  availabilityZone: eu-west-2b
+  cidrBlock: 192.168.64.0/18
+  vpcRef:
+    from:
+      name: prod-cluster-vpc
+  routeTableRefs:
+  - from:
+      name: prod-cluster-public-route-table
+  mapPublicIPOnLaunch: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: NATGateway
+metadata:
+  namespace: production
+  name: prod-cluster-natgateway1
+spec:
+  subnetRef:
+    from:
+      name: prod-cluster-public-subnet2
+  allocationRef:
+    from:
+      name: prod-cluster-eip
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: production
+  name: prod-cluster-cluster-role
+spec:
+  name: prod-cluster-cluster-role
+  description: "prod cluster cluster role"
+  policies:
+    - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "eks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: production
+  name: prod-cluster-node-role
+spec:
+  name: prod-cluster-node-role
+  description: "prod cluster node role"
+  policies:
+    - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+    - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "ec2.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: production
+  name: ack-admin-pia-role
+spec:
+  name: ack-admin-pia-role
+  description: "prod cluster admin pia role"
+  policies:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+  assumeRolePolicyDocument: |
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "pods.eks.amazonaws.com"
+                },
+                "Action": [
+                    "sts:AssumeRole",
+                    "sts:TagSession"
+                ]
+            }
+        ]
+    }
+---
+apiVersion: eks.services.k8s.aws/v1alpha1
+kind: Cluster
+metadata:
+  namespace: production
+  name: prod-cluster
+spec:
+  name: prod-cluster
+  roleRef:
+    from:
+      name: prod-cluster-cluster-role
+  version: "1.29"
+  resourcesVPCConfig:
+    endpointPrivateAccess: false
+    endpointPublicAccess: true
+    subnetRefs:
+    - from:
+        name: prod-cluster-public-subnet1
+    - from:
+        name: prod-cluster-public-subnet2
+---
+apiVersion: eks.services.k8s.aws/v1alpha1
+kind: Nodegroup
+metadata:
+  namespace: production
+  name: prod-cluster-nodegroup
+spec:
+  name: prod-ng
+  diskSize: 100
+  clusterRef:
+    from:
+      name: prod-cluster
+  subnetRefs:
+  - from:
+      name: prod-cluster-public-subnet1
+  - from:
+      name: prod-cluster-public-subnet2
+  nodeRoleRef:
+    from:
+      name: prod-cluster-node-role
+  updateConfig:
+    maxUnavailable: 1
+  scalingConfig:
+    minSize: 1
+    maxSize: 1
+    desiredSize: 1 

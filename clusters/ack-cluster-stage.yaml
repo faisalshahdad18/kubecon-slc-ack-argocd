@@ -1,0 +1,211 @@
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: VPC
+metadata:
+  namespace: staging
+  name: dev-cluster-vpc
+spec:
+  cidrBlocks:
+  - 192.168.0.0/16
+  enableDNSSupport: true
+  enableDNSHostnames: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: ElasticIPAddress
+metadata:
+  namespace: staging
+  name: dev-cluster-eip
+spec: {}
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: InternetGateway
+metadata:
+  namespace: staging
+  name: dev-cluster-igw
+spec:
+  vpcRef:
+    from:
+      name: dev-cluster-vpc
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: RouteTable
+metadata:
+  namespace: staging
+  name: dev-cluster-public-route-table
+spec:
+  vpcRef:
+    from:
+      name: dev-cluster-vpc
+  routes:
+    - destinationCIDRBlock: 0.0.0.0/0
+      gatewayRef:
+        from:
+          name: dev-cluster-igw
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: Subnet
+metadata:
+  namespace: staging
+  name: dev-cluster-public-subnet1
+spec:
+  availabilityZone: eu-west-2a
+  cidrBlock: 192.168.0.0/18
+  vpcRef:
+    from:
+      name: dev-cluster-vpc
+  routeTableRefs:
+  - from:
+      name: dev-cluster-public-route-table
+  mapPublicIPOnLaunch: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: Subnet
+metadata:
+  namespace: staging
+  name: dev-cluster-public-subnet2
+spec:
+  availabilityZone: eu-west-2b
+  cidrBlock: 192.168.64.0/18
+  vpcRef:
+    from:
+      name: dev-cluster-vpc
+  routeTableRefs:
+  - from:
+      name: dev-cluster-public-route-table
+  mapPublicIPOnLaunch: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: NATGateway
+metadata:
+  namespace: staging
+  name: dev-cluster-natgateway1
+spec:
+  subnetRef:
+    from:
+      name: dev-cluster-public-subnet2
+  allocationRef:
+    from:
+      name: dev-cluster-eip
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: staging
+  name: dev-cluster-cluster-role
+spec:
+  name: dev-cluster-cluster-role
+  description: "dev cluster cluster role"
+  policies:
+    - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "eks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: staging
+  name: dev-cluster-node-role
+spec:
+  name: dev-cluster-node-role
+  description: "dev cluster node role"
+  policies:
+    - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+    - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "ec2.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: staging
+  name: ack-admin-pia-role
+spec:
+  name: ack-admin-pia-role
+  description: "dev cluster admin pia role"
+  policies:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+  assumeRolePolicyDocument: |
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "pods.eks.amazonaws.com"
+                },
+                "Action": [
+                    "sts:AssumeRole",
+                    "sts:TagSession"
+                ]
+            }
+        ]
+    }
+---
+apiVersion: eks.services.k8s.aws/v1alpha1
+kind: Cluster
+metadata:
+  namespace: staging
+  name: dev-cluster
+spec:
+  name: dev-cluster
+  roleRef:
+    from:
+      name: dev-cluster-cluster-role
+  version: "1.29"
+  resourcesVPCConfig:
+    endpointPrivateAccess: false
+    endpointPublicAccess: true
+    subnetRefs:
+    - from:
+        name: dev-cluster-public-subnet1
+    - from:
+        name: dev-cluster-public-subnet2
+---
+apiVersion: eks.services.k8s.aws/v1alpha1
+kind: Nodegroup
+metadata:
+  namespace: staging
+  name: dev-cluster-nodegroup
+spec:
+  name: dev-ng
+  diskSize: 100
+  clusterRef:
+    from:
+      name: dev-cluster
+  subnetRefs:
+  - from:
+      name: dev-cluster-public-subnet1
+  - from:
+      name: dev-cluster-public-subnet2
+  nodeRoleRef:
+    from:
+      name: dev-cluster-node-role
+  updateConfig:
+    maxUnavailable: 1
+  scalingConfig:
+    minSize: 1
+    maxSize: 1
+    desiredSize: 1 
