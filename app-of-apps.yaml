@@ -7,7 +7,7 @@ spec:
     name: 'in-cluster'
     namespace: 'argocd'
   source:
-    path: 'apps/'
+    path: 'clusters/'
     repoURL: 'git@github.com:faisalshahdad18/kubecon-slc-ack-argocd.git'
     targetRevision: HEAD
   project: 'default'
