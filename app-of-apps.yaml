@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 'leaderboard-dev'
+spec:
+  destination:
+    name: 'in-cluster'
+    namespace: 'dev'
+  source:
+    path: 'charts/leaderboard'
+    repoURL: 'ssh://ssm-user@172.31.43.172/home/ssm-user/argo/'
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+      - values-dev.yaml
+  project: 'default'
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
