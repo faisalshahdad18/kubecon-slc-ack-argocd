@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'leaderboard-dev'
+  name: 'scoreboard-dev'
 spec:
   destination:
     name: 'in-cluster'
     namespace: 'dev'
   source:
-    path: 'charts/leaderboard'
+    path: 'charts/scoreboard'
     repoURL: 'git@github.com:faisalshahdad18/kubecon-slc-ack-argocd.git'
     targetRevision: HEAD
     helm:

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "helm-leaderboard.fullname" . }}
+  name: {{ template "helm-scoreboard.fullname" . }}
   labels:
-    app: {{ template "helm-leaderboard.name" . }}
-    chart: {{ template "helm-leaderboard.chart" . }}
+    app: {{ template "helm-scoreboard.name" . }}
+    chart: {{ template "helm-scoreboard.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -15,5 +15,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "helm-leaderboard.name" . }}
+    app: {{ template "helm-scoreboard.name" . }}
     release: {{ .Release.Name }}
