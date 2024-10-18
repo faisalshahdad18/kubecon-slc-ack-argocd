@@ -1,8 +1,8 @@
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: VPC
 metadata:
-  namespace: team-stage
-  name: stg-cluster-vpc
+  namespace: t-stage
+  name: st-cluster-vpc
 spec:
   cidrBlocks:
   - 192.168.0.0/16
@@ -12,87 +12,87 @@ spec:
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: ElasticIPAddress
 metadata:
-  namespace: team-stage
-  name: stg-cluster-eip
+  namespace: t-stage
+  name: st-cluster-eip
 spec: {}
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: InternetGateway
 metadata:
-  namespace: team-stage
-  name: stg-cluster-igw
+  namespace: t-stage
+  name: st-cluster-igw
 spec:
   vpcRef:
     from:
-      name: stg-cluster-vpc
+      name: st-cluster-vpc
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: RouteTable
 metadata:
-  namespace: team-stage
-  name: stg-cluster-public-route-table
+  namespace: t-stage
+  name: st-cluster-public-route-table
 spec:
   vpcRef:
     from:
-      name: stg-cluster-vpc
+      name: st-cluster-vpc
   routes:
     - destinationCIDRBlock: 0.0.0.0/0
       gatewayRef:
         from:
-          name: stg-cluster-igw
+          name: st-cluster-igw
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: team-stage
-  name: stg-cluster-public-subnet1
+  namespace: t-stage
+  name: st-cluster-public-subnet1
 spec:
   availabilityZone: eu-west-2a
   cidrBlock: 192.168.0.0/18
   vpcRef:
     from:
-      name: stg-cluster-vpc
+      name: st-cluster-vpc
   routeTableRefs:
   - from:
-      name: stg-cluster-public-route-table
+      name: st-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: team-stage
-  name: stg-cluster-public-subnet2
+  namespace: t-stage
+  name: st-cluster-public-subnet2
 spec:
   availabilityZone: eu-west-2b
   cidrBlock: 192.168.64.0/18
   vpcRef:
     from:
-      name: stg-cluster-vpc
+      name: st-cluster-vpc
   routeTableRefs:
   - from:
-      name: stg-cluster-public-route-table
+      name: st-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: NATGateway
 metadata:
-  namespace: team-stage
-  name: stg-cluster-natgateway1
+  namespace: t-stage
+  name: st-cluster-natgateway1
 spec:
   subnetRef:
     from:
-      name: stg-cluster-public-subnet2
+      name: st-cluster-public-subnet2
   allocationRef:
     from:
-      name: stg-cluster-eip
+      name: st-cluster-eip
 ---
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: team-stage
-  name: stg-cluster-cluster-role
+  namespace: t-stage
+  name: st-cluster-cluster-role
 spec:
-  name: stg-cluster-cluster-role
+  name: st-cluster-cluster-role
   description: "stage cluster cluster role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -113,10 +113,10 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: team-stage
-  name: stg-cluster-node-role
+  namespace: t-stage
+  name: st-cluster-node-role
 spec:
-  name: stg-cluster-node-role
+  name: st-cluster-node-role
   description: "stage cluster node role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
@@ -139,7 +139,7 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: team-stage
+  namespace: t-stage
   name: ack-admin-pia-role-stg
 spec:
   name: ack-admin-pia-role-stg
@@ -167,42 +167,42 @@ spec:
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
-  namespace: team-stage
-  name: stg-cluster
+  namespace: t-stage
+  name: st-cluster
 spec:
-  name: stg-cluster
+  name: st-cluster
   roleRef:
     from:
-      name: stg-cluster-cluster-role
+      name: st-cluster-cluster-role
   version: "1.29"
   resourcesVPCConfig:
     endpointPrivateAccess: false
     endpointPublicAccess: true
     subnetRefs:
     - from:
-        name: stg-cluster-public-subnet1
+        name: st-cluster-public-subnet1
     - from:
-        name: stg-cluster-public-subnet2
+        name: st-cluster-public-subnet2
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
 metadata:
-  namespace: team-stage
-  name: stg-cluster-nodegroup
+  namespace: t-stage
+  name: st-cluster-nodegroup
 spec:
-  name: stg-ng
+  name: st-ng
   diskSize: 100
   clusterRef:
     from:
-      name: stg-cluster
+      name: st-cluster
   subnetRefs:
   - from:
-      name: stg-cluster-public-subnet1
+      name: st-cluster-public-subnet1
   - from:
-      name: stg-cluster-public-subnet2
+      name: st-cluster-public-subnet2
   nodeRoleRef:
     from:
-      name: stg-cluster-node-role
+      name: st-cluster-node-role
   updateConfig:
     maxUnavailable: 1
   scalingConfig:

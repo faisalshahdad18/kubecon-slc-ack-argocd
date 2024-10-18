@@ -1,8 +1,8 @@
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: VPC
 metadata:
-  namespace: team-prod
-  name: prd-cluster-vpc
+  namespace: t-prod
+  name: pd-cluster-vpc
 spec:
   cidrBlocks:
   - 192.168.0.0/16
@@ -12,87 +12,87 @@ spec:
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: ElasticIPAddress
 metadata:
-  namespace: team-prod
-  name: prd-cluster-eip
+  namespace: t-prod
+  name: pd-cluster-eip
 spec: {}
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: InternetGateway
 metadata:
-  namespace: team-prod
-  name: prd-cluster-igw
+  namespace: t-prod
+  name: pd-cluster-igw
 spec:
   vpcRef:
     from:
-      name: prd-cluster-vpc
+      name: pd-cluster-vpc
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: RouteTable
 metadata:
-  namespace: team-prod
-  name: prd-cluster-public-route-table
+  namespace: t-prod
+  name: pd-cluster-public-route-table
 spec:
   vpcRef:
     from:
-      name: prd-cluster-vpc
+      name: pd-cluster-vpc
   routes:
     - destinationCIDRBlock: 0.0.0.0/0
       gatewayRef:
         from:
-          name: prd-cluster-igw
+          name: pd-cluster-igw
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: team-prod
-  name: prd-cluster-public-subnet1
+  namespace: t-prod
+  name: pd-cluster-public-subnet1
 spec:
   availabilityZone: eu-west-2a
   cidrBlock: 192.168.0.0/18
   vpcRef:
     from:
-      name: prd-cluster-vpc
+      name: pd-cluster-vpc
   routeTableRefs:
   - from:
-      name: prd-cluster-public-route-table
+      name: pd-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
-  namespace: team-prod
-  name: prd-cluster-public-subnet2
+  namespace: t-prod
+  name: pd-cluster-public-subnet2
 spec:
   availabilityZone: eu-west-2b
   cidrBlock: 192.168.64.0/18
   vpcRef:
     from:
-      name: prd-cluster-vpc
+      name: pd-cluster-vpc
   routeTableRefs:
   - from:
-      name: prd-cluster-public-route-table
+      name: pd-cluster-public-route-table
   mapPublicIPOnLaunch: true
 ---
 apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: NATGateway
 metadata:
-  namespace: team-prod
-  name: prd-cluster-natgateway1
+  namespace: t-prod
+  name: pd-cluster-natgateway1
 spec:
   subnetRef:
     from:
-      name: prd-cluster-public-subnet2
+      name: pd-cluster-public-subnet2
   allocationRef:
     from:
-      name: prd-cluster-eip
+      name: pd-cluster-eip
 ---
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: team-prod
-  name: prd-cluster-cluster-role
+  namespace: t-prod
+  name: pd-cluster-cluster-role
 spec:
-  name: prd-cluster-cluster-role
+  name: pd-cluster-cluster-role
   description: "prod cluster cluster role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -113,10 +113,10 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: team-prod
-  name: prd-cluster-node-role
+  namespace: t-prod
+  name: pd-cluster-node-role
 spec:
-  name: prd-cluster-node-role
+  name: pd-cluster-node-role
   description: "prod cluster node role"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
@@ -139,7 +139,7 @@ spec:
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
-  namespace: team-prod
+  namespace: t-prod
   name: ack-admin-pia-role-prd
 spec:
   name: ack-admin-pia-role-prd
@@ -167,42 +167,42 @@ spec:
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
-  namespace: team-prod
-  name: prd-cluster
+  namespace: t-prod
+  name: pd-cluster
 spec:
-  name: prd-cluster
+  name: pd-cluster
   roleRef:
     from:
-      name: prd-cluster-cluster-role
+      name: pd-cluster-cluster-role
   version: "1.29"
   resourcesVPCConfig:
     endpointPrivateAccess: false
     endpointPublicAccess: true
     subnetRefs:
     - from:
-        name: prd-cluster-public-subnet1
+        name: pd-cluster-public-subnet1
     - from:
-        name: prd-cluster-public-subnet2
+        name: pd-cluster-public-subnet2
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
 metadata:
-  namespace: team-prod
-  name: prd-cluster-nodegroup
+  namespace: t-prod
+  name: pd-cluster-nodegroup
 spec:
-  name: prd-ng
+  name: pd-ng
   diskSize: 100
   clusterRef:
     from:
-      name: prd-cluster
+      name: pd-cluster
   subnetRefs:
   - from:
-      name: prd-cluster-public-subnet1
+      name: pd-cluster-public-subnet1
   - from:
-      name: prd-cluster-public-subnet2
+      name: pd-cluster-public-subnet2
   nodeRoleRef:
     from:
-      name: prd-cluster-node-role
+      name: pd-cluster-node-role
   updateConfig:
     maxUnavailable: 1
   scalingConfig:
