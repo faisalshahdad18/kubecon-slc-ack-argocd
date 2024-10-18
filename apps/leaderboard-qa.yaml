@@ -8,7 +8,7 @@ spec:
     namespace: 'qa'
   source:
     path: 'charts/leaderboard'
-    repoURL: 'ssh://root@10.5.0.35/root/argo-cd-learning-assets/'
+    repoURL: 'git@github.com:faisalshahdad18/kubecon-slc-ack-argocd.git'
     targetRevision: HEAD
     helm:
       valueFiles:
