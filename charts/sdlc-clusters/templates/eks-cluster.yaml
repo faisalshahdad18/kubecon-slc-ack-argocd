@@ -8,7 +8,7 @@ spec:
   roleRef:
     from:
       name: epam-d-cluster-cluster-role
-  version: {{ .Values.eksCluster.version }}
+  version: "{{ .Values.eksCluster.version }}"
   resourcesVPCConfig:
     endpointPrivateAccess: {{ .Values.eksCluster.endpointPrivateAccess }}
     endpointPublicAccess: {{ .Values.eksCluster.endpointPublicAccess }}
