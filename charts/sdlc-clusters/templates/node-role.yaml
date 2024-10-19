@@ -2,11 +2,11 @@ apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.names.nodeRole }}
+  name: {{ .Values.namespace }}-node-role
   annotations:
     argocd.argoproj.io/sync-wave: "8"
 spec:
-  name: {{ .Values.names.nodeRole }}
+  name: {{ .Values.namespace }}-node-role
   description: "Node group role for the dev cluster"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy

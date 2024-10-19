@@ -9,7 +9,7 @@ spec:
   name: {{ .Values.namespace }}
   roleRef:
     from:
-      name: {{ .Values.namespace }}-role
+      name: {{ .Values.namespace }}-cluster-role
   version: "{{ .Values.eksCluster.version }}"
   resourcesVPCConfig:
     endpointPrivateAccess: {{ .Values.eksCluster.endpointPrivateAccess }}

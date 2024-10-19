@@ -2,11 +2,11 @@ apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Role
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.names.clusterRole }}
+  name: {{ .Values.namespace }}-cluster-role
   annotations:
     argocd.argoproj.io/sync-wave: "7"
 spec:
-  name: {{ .Values.names.clusterRole }}
+  name: {{ .Values.namespace }}-cluster-role
   description: "Cluster role for the dev cluster"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
