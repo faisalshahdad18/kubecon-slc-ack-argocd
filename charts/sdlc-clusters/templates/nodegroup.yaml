@@ -2,7 +2,7 @@ apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
 metadata:
   namespace: {{ .Values.namespace }}
-  name: epam-d-cluster-nodegroup
+  name: {{ .Values.namespace }}-nodegroup
   annotations:
     argocd.argoproj.io/sync-wave: "11"
 spec:
@@ -10,15 +10,15 @@ spec:
   diskSize: {{ .Values.nodegroup.diskSize }}
   clusterRef:
     from:
-      name: epam-d-cluster
+      name: {{ .Values.namespace }}
   subnetRefs:
   - from:
-      name: epam-d-cluster-public-subnet1
+      name: {{ .Values.namespace }}-public-subnet1
   - from:
-      name: epam-d-cluster-public-subnet2
+      name: {{ .Values.namespace }}-public-subnet2
   nodeRoleRef:
     from:
-      name: epam-d-cluster-node-role
+      name: {{ .Values.namespace }}-node-role
   updateConfig:
     maxUnavailable: 1
   scalingConfig:

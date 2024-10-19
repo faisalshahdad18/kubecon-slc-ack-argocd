@@ -15,5 +15,11 @@ spec:
       - values.yaml
   project: 'default'
   syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+
+

@@ -2,21 +2,21 @@ apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
   namespace: {{ .Values.namespace }}
-  name: epam-d-cluster
+  name: {{ .Values.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "10"
 spec:
-  name: epam-d-cluster
+  name: {{ .Values.namespace }}
   roleRef:
     from:
-      name: epam-d-cluster-role
+      name: {{ .Values.namespace }}-role
   version: "{{ .Values.eksCluster.version }}"
   resourcesVPCConfig:
     endpointPrivateAccess: {{ .Values.eksCluster.endpointPrivateAccess }}
     endpointPublicAccess: {{ .Values.eksCluster.endpointPublicAccess }}
     subnetRefs:
     - from:
-        name: epam-d-cluster-public-subnet1
+        name: {{ .Values.namespace }}-public-subnet1
     - from:
-        name: epam-d-cluster-public-subnet2
+        name: {{ .Values.namespace }}-public-subnet2
 

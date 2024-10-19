@@ -2,16 +2,16 @@ apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: RouteTable
 metadata:
   namespace: {{ .Values.namespace }}
-  name: epam-d-cluster-public-route-table
+  name: {{ .Values.namespace }}-public-route-table
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
   vpcRef:
     from:
-      name: epam-d-cluster-vpc
+      name: {{ .Values.namespace }}-vpc
   routes:
     - destinationCIDRBlock: 0.0.0.0/0
       gatewayRef:
         from:
-          name: epam-d-cluster-igw
+          name: {{ .Values.namespace }}-igw
 

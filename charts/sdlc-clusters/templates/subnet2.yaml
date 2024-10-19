@@ -2,7 +2,7 @@ apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: Subnet
 metadata:
   namespace: {{ .Values.namespace }}
-  name: epam-d-cluster-public-subnet2
+  name: {{ .Values.namespace }}-public-subnet2
   annotations:
     argocd.argoproj.io/sync-wave: "5"
 spec:
@@ -10,9 +10,9 @@ spec:
   cidrBlock: {{ .Values.subnet2.cidrBlock }}
   vpcRef:
     from:
-      name: epam-d-cluster-vpc
+      name: {{ .Values.namespace }}-vpc
   routeTableRefs:
   - from:
-      name: epam-d-cluster-public-route-table
+      name: {{ .Values.namespace }}-public-route-table
   mapPublicIPOnLaunch: true
 

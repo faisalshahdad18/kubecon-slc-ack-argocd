@@ -2,11 +2,11 @@ apiVersion: ec2.services.k8s.aws/v1alpha1
 kind: InternetGateway
 metadata:
   namespace: {{ .Values.namespace }}
-  name: epam-d-cluster-igw
+  name: {{ .Values.namespace }}-igw
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   vpcRef:
     from:
-      name: epam-d-cluster-vpc
+      name: {{ .Values.namespace }}-vpc
 
