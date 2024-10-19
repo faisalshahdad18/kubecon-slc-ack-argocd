@@ -3,6 +3,8 @@ kind: VPC
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-vpc
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   cidrBlocks:
   - {{ .Values.vpc.cidrBlocks | join "," }}

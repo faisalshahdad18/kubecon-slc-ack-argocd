@@ -3,5 +3,7 @@ kind: ElasticIPAddress
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-eip
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec: {}
 

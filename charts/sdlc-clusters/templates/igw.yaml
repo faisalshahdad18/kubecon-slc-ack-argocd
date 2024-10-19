@@ -3,6 +3,8 @@ kind: InternetGateway
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-igw
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   vpcRef:
     from:

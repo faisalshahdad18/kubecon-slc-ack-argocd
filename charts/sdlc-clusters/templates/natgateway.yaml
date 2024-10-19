@@ -3,6 +3,8 @@ kind: NATGateway
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-natgateway1
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   subnetRef:
     from:

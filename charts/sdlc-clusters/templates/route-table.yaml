@@ -3,6 +3,8 @@ kind: RouteTable
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-public-route-table
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   vpcRef:
     from:

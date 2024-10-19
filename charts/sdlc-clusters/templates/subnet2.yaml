@@ -3,6 +3,8 @@ kind: Subnet
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-public-subnet2
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   availabilityZone: {{ .Values.subnet2.availabilityZone }}
   cidrBlock: {{ .Values.subnet2.cidrBlock }}

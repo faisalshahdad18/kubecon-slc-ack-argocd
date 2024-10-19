@@ -3,6 +3,8 @@ kind: Nodegroup
 metadata:
   namespace: {{ .Values.namespace }}
   name: epam-d-cluster-nodegroup
+  annotations:
+    argocd.argoproj.io/sync-wave: "11"
 spec:
   name: d-ng
   diskSize: {{ .Values.nodegroup.diskSize }}
