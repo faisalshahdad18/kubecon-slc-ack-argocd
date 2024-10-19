@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'ekscluster-dev'
+  name: 'ekscluster-stage'
 spec:
   destination:
     name: 'in-cluster'
@@ -11,7 +11,7 @@ spec:
     targetRevision: HEAD
     helm:
       valueFiles:
-      - value-dev.yaml
+      - values-stage.yaml
   project: 'default'
   syncPolicy:
     automated:

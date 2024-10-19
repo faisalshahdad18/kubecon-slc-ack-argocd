@@ -1,7 +1,7 @@
-namespace: epam-dev
+namespace: prod
 
 region: "eu-west-2"
-accountID: "215499352742"
+accountID: "004164541427"
 
 vpc:
   cidrBlocks:
