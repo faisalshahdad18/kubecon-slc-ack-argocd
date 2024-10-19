@@ -11,7 +11,7 @@ spec:
     targetRevision: HEAD
     helm:
       valueFiles:
-      - value-dev.yaml
+      - values-dev.yaml
   project: 'default'
   syncPolicy:
     automated:
