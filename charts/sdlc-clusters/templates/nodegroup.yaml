@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "11"
 spec:
-  name: d-ng
+  name: {{ .Values.namespace }}-nodegroup
   diskSize: {{ .Values.nodegroup.diskSize }}
   clusterRef:
     from:
