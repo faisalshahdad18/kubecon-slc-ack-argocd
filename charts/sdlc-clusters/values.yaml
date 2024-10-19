@@ -1,5 +1,8 @@
 namespace: epam-dev
 
+region: "eu-west-2"
+accountID: "215499352742"
+
 names:
   piaRole: ack-admin-pia-role-dv
   nodeRole: epam-d-cluster-node-role
