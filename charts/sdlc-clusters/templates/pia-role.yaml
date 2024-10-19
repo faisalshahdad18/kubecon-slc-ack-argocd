@@ -1,0 +1,28 @@
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.names.piaRole }}
+spec:
+  name: {{ .Values.names.piaRole }}
+  description: "Pod Identity Assumer role for the dev cluster"
+  policies:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+  assumeRolePolicyDocument: |
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "pods.eks.amazonaws.com"
+                },
+                "Action": [
+                    "sts:AssumeRole",
+                    "sts:TagSession"
+                ]
+            }
+        ]
+    }
+
