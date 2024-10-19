@@ -2,9 +2,9 @@ namespace: epam-dev
 
 names:
   piaRole: ack-admin-pia-role-dv
-  nodeRole: d-cluster-node-role
-  clusterRole: d-cluster-cluster-role
-  
+  nodeRole: epam-d-cluster-node-role
+  clusterRole: epam-d-cluster-role
+
 vpc:
   cidrBlocks:
     - 192.168.0.0/16
