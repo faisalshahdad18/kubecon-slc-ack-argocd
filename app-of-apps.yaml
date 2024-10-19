@@ -11,3 +11,9 @@ spec:
     repoURL: 'git@github.com:faisalshahdad18/kubecon-slc-ack-argocd.git'
     targetRevision: HEAD
   project: 'default'
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
