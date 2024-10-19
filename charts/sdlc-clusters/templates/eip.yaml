@@ -4,6 +4,6 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: {{ .Values.namespace }}-eip
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec: {}
 

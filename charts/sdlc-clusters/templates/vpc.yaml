@@ -4,10 +4,9 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: {{ .Values.namespace }}-vpc
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   cidrBlocks:
   - {{ .Values.vpc.cidrBlocks | join "," }}
   enableDNSSupport: {{ .Values.vpc.enableDNSSupport }}
   enableDNSHostnames: {{ .Values.vpc.enableDNSHostnames }}
-
