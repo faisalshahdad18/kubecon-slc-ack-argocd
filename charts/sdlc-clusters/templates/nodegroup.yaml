@@ -1,0 +1,26 @@
+apiVersion: eks.services.k8s.aws/v1alpha1
+kind: Nodegroup
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: epam-d-cluster-nodegroup
+spec:
+  name: d-ng
+  diskSize: {{ .Values.nodegroup.diskSize }}
+  clusterRef:
+    from:
+      name: epam-d-cluster
+  subnetRefs:
+  - from:
+      name: epam-d-cluster-public-subnet1
+  - from:
+      name: epam-d-cluster-public-subnet2
+  nodeRoleRef:
+    from:
+      name: epam-d-cluster-node-role
+  updateConfig:
+    maxUnavailable: 1
+  scalingConfig:
+    minSize: {{ .Values.nodegroup.scalingConfig.minSize }}
+    maxSize: {{ .Values.nodegroup.scalingConfig.maxSize }}
+    desiredSize: {{ .Values.nodegroup.scalingConfig.desiredSize }}
+

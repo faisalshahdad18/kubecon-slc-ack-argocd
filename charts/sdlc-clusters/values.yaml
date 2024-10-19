@@ -1,0 +1,28 @@
+namespace: epam-dev
+
+vpc:
+  cidrBlocks:
+    - 192.168.0.0/16
+  enableDNSSupport: true
+  enableDNSHostnames: true
+
+subnet1:
+  availabilityZone: eu-west-2a
+  cidrBlock: 192.168.0.0/18
+
+subnet2:
+  availabilityZone: eu-west-2b
+  cidrBlock: 192.168.64.0/18
+
+eksCluster:
+  version: "1.29"
+  endpointPrivateAccess: false
+  endpointPublicAccess: true
+
+nodegroup:
+  diskSize: 100
+  scalingConfig:
+    minSize: 1
+    maxSize: 1
+    desiredSize: 1
+

@@ -1,13 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'sdlc-clusters'
+  name: 'leaderboard-dev'
 spec:
   destination:
     name: 'in-cluster'
-    namespace: 'argocd'
+    namespace: 'dev'
   source:
-    path: 'clusters/'
+    path: 'charts/leaderboard'
     repoURL: 'git@github.com:faisalshahdad18/kubecon-slc-ack-argocd.git'
     targetRevision: HEAD
+    helm:
+      valueFiles:
+      - values-dev.yaml
   project: 'default'
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

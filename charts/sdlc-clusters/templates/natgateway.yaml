@@ -1,0 +1,13 @@
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: NATGateway
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: epam-d-cluster-natgateway1
+spec:
+  subnetRef:
+    from:
+      name: epam-d-cluster-public-subnet2
+  allocationRef:
+    from:
+      name: epam-d-cluster-eip
+

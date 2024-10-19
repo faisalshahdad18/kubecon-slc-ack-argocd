@@ -1,0 +1,15 @@
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: RouteTable
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: epam-d-cluster-public-route-table
+spec:
+  vpcRef:
+    from:
+      name: epam-d-cluster-vpc
+  routes:
+    - destinationCIDRBlock: 0.0.0.0/0
+      gatewayRef:
+        from:
+          name: epam-d-cluster-igw
+

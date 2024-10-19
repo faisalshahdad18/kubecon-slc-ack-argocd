@@ -1,0 +1,5 @@
+apiVersion: v2
+name: my-eks-cluster
+description: A Helm chart to deploy an AWS EKS cluster and related resources using ACK
+version: 0.1.0
+
