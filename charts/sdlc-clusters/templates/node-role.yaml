@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "8"
 spec:
   name: {{ .Values.namespace }}-node-role
-  description: "Node group role for the dev cluster"
+  description: "Node group role for the eks cluster"
   policies:
     - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
     - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
