@@ -10,7 +10,7 @@ spec:
   diskSize: {{ .Values.nodegroup.diskSize }}
   clusterRef:
     from:
-      name: {{ .Values.namespace }}
+      name: {{ .Values.namespace }}-cluster
   subnetRefs:
   - from:
       name: {{ .Values.namespace }}-public-subnet1

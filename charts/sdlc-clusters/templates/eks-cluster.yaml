@@ -2,11 +2,11 @@ apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Cluster
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.namespace }}
+  name: {{ .Values.namespace }}-cluster
   annotations:
     argocd.argoproj.io/sync-wave: "10"
 spec:
-  name: {{ .Values.namespace }}
+  name: {{ .Values.namespace }}-cluster
   roleRef:
     from:
       name: {{ .Values.namespace }}-cluster-role
