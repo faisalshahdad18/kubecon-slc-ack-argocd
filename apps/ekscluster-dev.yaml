@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'leaderboard-dev'
+  name: 'ekscluster-dev'
 spec:
   destination:
     name: 'in-cluster'
-    namespace: 'dev'
+    namespace: 'epam-dev'
   source:
-    path: 'charts/leaderboard'
+    path: 'charts/sdlc-clusters'
     repoURL: 'git@github.com:faisalshahdad18/kubecon-slc-ack-argocd.git'
     targetRevision: HEAD
     helm:
       valueFiles:
-      - values-dev.yaml
+      - values.yaml
   project: 'default'
   syncPolicy:
     syncOptions:
