@@ -3,7 +3,7 @@
 ## Introduction
 
 ### Overview
-In a modern cloud-native environment, managing Kubernetes clusters across multiple AWS accounts can be complex. The need for seamless integration, security, and governance becomes even more crucial when multiple teams work across environments such as development, staging, and production. This case study explores how to use Helm, AWS Controllers for Kubernetes (ACK), and ArgoCD to create, configure, and manage cross-account Amazon EKS clusters from a centralized management EKS cluster in a Hub and Spoke architecture.
+In a modern cloud-native environment, managing Kubernetes clusters across multiple AWS accounts can be complex. The need for seamless integration, security, and governance becomes even more crucial when multiple teams work across environments such as development, staging, and production. This case study explores how to use [Helm](https://helm.sh/), [AWS Controllers for Kubernetes (ACK)](https://github.com/aws-controllers-k8s/community), and [ArgoCD](https://argo-cd.readthedocs.io/en/latest/) to create, configure, and manage cross-account Amazon EKS clusters from a centralized management EKS cluster in a Hub and Spoke architecture.
 
 By leveraging Helm charts for provisioning and ACK for managing AWS resources, we streamline the creation of EKS clusters across development, staging, and production accounts. ArgoCD enables continuous delivery of applications and Kubernetes configurations, ensuring consistency and security.
 
