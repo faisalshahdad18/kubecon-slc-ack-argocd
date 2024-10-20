@@ -141,7 +141,7 @@ spec:
       - PrunePropagationPolicy=foreground
 ```
 
-**ArgoCD Application**
+**ArgoCD Applications**
 ![Cross-Account EKS Clusters Architecture](./assets/ArgoCD.jpg)
 
 **Cluster Creation**
