@@ -188,9 +188,7 @@ spec:
 ## Conclusion
 
 By adopting this Hub and Spoke architecture using Helm, AWS Controllers for Kubernetes (ACK), and ArgoCD, organizations can simplify and automate the creation and management of Amazon EKS clusters across multiple AWS accounts. 
-
 Helm provides a standardized and repeatable method for provisioning clusters, while ACK enables centralized management of AWS resources. ArgoCD ensures continuous delivery and synchronization across all environments using a GitOps model. 
-
 This approach reduces operational overhead, improves security, and scales easily, making it a robust solution for managing SDLC EKS clusters in complex, multi-account environments.
 
 ---
