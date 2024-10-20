@@ -136,9 +136,6 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      allowEmpty: true
-    syncOptions:
-      - PrunePropagationPolicy=foreground
 ```
 
 **ArgoCD Applications**
@@ -146,7 +143,7 @@ spec:
 
 **EKS Cluster Creation**
 
-![Cross-Account EKS Clusters Architecture](./assets/eks-clusters.png)
+![Cross-Account EKS Clusters Architecture](./assets/eksclusters.png)
 
 **NodeGroups Creation**
 
