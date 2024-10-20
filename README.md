@@ -81,7 +81,7 @@ Define a Helm chart that will create the EKS cluster using the required configur
 - NAT Gateway and IAM roles
 - EKS Cluster
 
-**Example values-dev.yaml for an EKS development cluster Helm chart**:
+**Example [values-dev.yaml](charts/sdlc-clusters/values-dev.yaml) for an EKS development cluster Helm chart**:
 ```yaml
 namespace: dev
 
