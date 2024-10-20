@@ -81,28 +81,6 @@ Define a Helm chart that will create the EKS cluster using the required configur
 - NAT Gateway and IAM roles
 - EKS Cluster
 
-A typical layout of your Git repository for this might be:
-```bash
-.
-├── Chart.yaml
-├── templates
-│   ├── cluster-role.yaml
-│   ├── eip.yaml
-│   ├── eks-cluster.yaml
-│   ├── igw.yaml
-│   ├── namespace.yaml
-│   ├── natgateway.yaml
-│   ├── node-role.yaml
-│   ├── nodegroup.yaml
-│   ├── pia-role.yaml
-│   ├── route-table.yaml
-│   ├── subnet1.yaml
-│   ├── subnet2.yaml
-│   └── vpc.yaml
-├── values-dev.yaml
-├── values-prod.yaml
-└── values-stage.yaml
-```
 **Example values-dev.yaml for an EKS development cluster Helm chart**:
 ```yaml
 namespace: dev
