@@ -144,9 +144,13 @@ spec:
 **ArgoCD Applications**
 ![Cross-Account EKS Clusters Architecture](./assets/ArgoCD.jpg)
 
-**Cluster Creation**
+**EKS Cluster Creation**
 
 ![Cross-Account EKS Clusters Architecture](./assets/eks-clusters.png)
+
+**NodeGroups Creation**
+
+![Cross-Account EKS Clusters Architecture](./assets/nodegroup.png)
 
 ## Key Takeaways
 
