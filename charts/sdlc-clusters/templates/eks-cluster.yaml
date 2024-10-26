@@ -19,4 +19,3 @@ spec:
         name: {{ .Values.namespace }}-public-subnet1
     - from:
         name: {{ .Values.namespace }}-public-subnet2
-

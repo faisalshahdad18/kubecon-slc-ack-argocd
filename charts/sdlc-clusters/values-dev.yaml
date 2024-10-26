@@ -28,4 +28,3 @@ nodegroup:
     minSize: 1
     maxSize: 1
     desiredSize: 1
-

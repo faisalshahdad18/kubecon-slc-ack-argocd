@@ -15,4 +15,3 @@ spec:
   - from:
       name: {{ .Values.namespace }}-public-route-table
   mapPublicIPOnLaunch: true
-

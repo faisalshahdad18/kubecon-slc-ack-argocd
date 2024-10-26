@@ -14,4 +14,3 @@ spec:
       gatewayRef:
         from:
           name: {{ .Values.namespace }}-igw
-

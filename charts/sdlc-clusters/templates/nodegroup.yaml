@@ -25,4 +25,3 @@ spec:
     minSize: {{ .Values.nodegroup.scalingConfig.minSize }}
     maxSize: {{ .Values.nodegroup.scalingConfig.maxSize }}
     desiredSize: {{ .Values.nodegroup.scalingConfig.desiredSize }}
-

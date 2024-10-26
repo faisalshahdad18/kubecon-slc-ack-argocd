@@ -9,4 +9,3 @@ spec:
   vpcRef:
     from:
       name: {{ .Values.namespace }}-vpc
-
